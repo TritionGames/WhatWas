@@ -22,15 +22,19 @@ class Game:
         pg.mixer_music.set_volume(1)
         pg.mixer_music.play()
 
+        self.player = modules.Player()
+        self.player.entity = modules.entities.Entity()
+        self.rect_map = []
+
     def load_pg_assets(self):
-        self.font = pg.font.SysFont("Comic Sans", 50)
+        # self.font = pg.font.SysFont("Comic Sans MS", 50)
         self.title = pg.transform.scale(pg.image.load("assets/title.png").convert(), (800, 400))
 
         self.title_background = pg.transform.scale(pg.image.load("assets/background.png"), (800, 800)).convert()
 
     def run(self):
         while self.running:
-            self.clock.tick(360) 
+            dt = self.clock.tick(360) * 0.001
 
             if self.scene == 'main menu':
                 self.display.blit(self.title_background)
@@ -47,6 +51,10 @@ class Game:
 
             elif self.scene == "play":
                 self.display.fill((255, 255, 255))
+
+                self.player.listen(dt)
+                self.player.update(dt)
+                self.player.render(self.display)
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
